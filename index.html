@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Links Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, checkbox {
+            width: 100%;
+            height: 30px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+        }
+        #numberOptions {
+            display: none;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px; /* Add margin between buttons */
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #linksContainer {
+            margin-top: 20px;
+            text-align: center; /* Center-align the links */
+        }
+        a {
+            display: block;
+            margin-bottom: 5px;
+            color: #007bff;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <label for="numLetters">Number of Letters:</label>
+    <input type="number" id="numLetters" min="1" max="10" value="6">
+
+    <label for="numLinks">Number of Links:</label>
+    <input type="number" id="numLinks" min="1" max="10" value="3">
+
+    <div class="checkbox-label">
+        <label for="includeNumber">Include Number:</label>
+        <input type="checkbox" id="includeNumber" onchange="toggleNumberOptions()">
+    </div>
+
+    <div id="numberOptions">
+        <label for="customNumber">Custom Number:</label>
+        <input type="number" id="customNumber" min="0" value="0">
+
+        <label for="numberPosition">Number Position:</label>
+        <input type="number" id="numberPosition" min="1" value="1">
+
+        <label for="repeatTimes">Repeat Times:</label>
+        <input type="number" id="repeatTimes" min="1" value="1">
+    </div>
+
+    <button id="generateLinksButton" onclick="generateLinks()">Generate Links</button>
+    <button id="openLinksButton" onclick="openLinks()">Open Links Continuously</button>
+    <div id="linksContainer"></div>
+
+    <script>
+        function toggleNumberOptions() {
+            var numberOptions = document.getElementById("numberOptions");
+            var includeNumber = document.getElementById("includeNumber").checked;
+            numberOptions.style.display = includeNumber ? "block" : "none";
+        }
+
+        function generateLinks() {
+            var linksContainer = document.getElementById("linksContainer");
+            var numLetters = document.getElementById("numLetters").value;
+            var numLinks = document.getElementById("numLinks").value;
+            var includeNumber = document.getElementById("includeNumber").checked;
+            var customNumber = parseInt(document.getElementById("customNumber").value);
+            var numberPosition = parseInt(document.getElementById("numberPosition").value);
+            var repeatTimes = parseInt(document.getElementById("repeatTimes").value);
+            linksContainer.innerHTML = "";
+
+            for (var i = 1; i <= numLinks; i++) {
+                var randomText = generateRandomText(numLetters, includeNumber, customNumber, numberPosition, repeatTimes);
+                var link = document.createElement("a");
+                link.href = "https://www.namecheap.com/hosting/purchase/domain-connection/?product=stellar-business&addons=server-location%3Bserver-location-us&duration=1&durationtype=year&domain=" + randomText + ".pw&domainType=new";
+                link.textContent = "Link " + i;
+                linksContainer.appendChild(link);
+            }
+        }
+
+        function openLinks() {
+            var links = document.querySelectorAll("#linksContainer a");
+            var currentIndex = 0;
+
+            function openNextLink() {
+                if (currentIndex < links.length) {
+                    links[currentIndex].target = "_blank"; // Open link in new tab/window
+                    links[currentIndex].click();
+                    currentIndex++;
+                    setTimeout(openNextLink, 2000); // Delay of 2 seconds between opening links
+                }
+            }
+
+            openNextLink();
+        }
+
+        function generateRandomText(length, includeNumber, customNumber, numberPosition, repeatTimes) {
+            var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+            var text = "";
+            for (var i = 0; i < length; i++) {
+                text += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            if (includeNumber) {
+                if (numberPosition <= text.length + 1) {
+                    text = text.slice(0, numberPosition - 1) + customNumber.toString().repeat(repeatTimes) + text.slice(numberPosition - 1);
+                } else {
+                    text += customNumber.toString().repeat(repeatTimes);
+                }
+            }
+            if (text.length > length) {
+                text = text.slice(0, length);
+            }
+            return text;
+        }
+    </script>
+</body>
+  </html>
+      
